@@ -34,6 +34,7 @@ public class TastingRoomService {
         beerUpcs.add(BeerOrderBootStrap.BEER_1_UPC);
         beerUpcs.add(BeerOrderBootStrap.BEER_2_UPC);
         beerUpcs.add(BeerOrderBootStrap.BEER_3_UPC);
+
     }
 
     @Transactional
@@ -51,6 +52,7 @@ public class TastingRoomService {
 
     private void doPlaceOrder(Customer customer) {
         String beerToOrder = getRandomBeerUpc();
+        log.info("Random UPC -> "+beerToOrder);
 
         BeerOrderLineDto beerOrderLine = BeerOrderLineDto.builder()
                 .upc(beerToOrder)
@@ -60,17 +62,24 @@ public class TastingRoomService {
         List<BeerOrderLineDto> beerOrderLineSet = new ArrayList<>();
         beerOrderLineSet.add(beerOrderLine);
 
+        log.info("BEFORE building -> "+beerOrderLineSet.get(0).getUpc());
+
         BeerOrderDto beerOrder = BeerOrderDto.builder()
                 .customerId(customer.getId())
                 .customerRef(UUID.randomUUID().toString())
                 .beerOrderLines(beerOrderLineSet)
                 .build();
 
+        log.info("AFTER building -> "+beerOrder.getBeerOrderLines().get(0).getUpc());
+        log.info("Tasting Room Customer id --> "+customer.getId());
+
         BeerOrderDto savedOrder = beerOrderService.placeOrder(customer.getId(), beerOrder);
 
     }
 
     private String getRandomBeerUpc() {
-        return beerUpcs.get(new Random().nextInt(beerUpcs.size() -0));
+        int sample = new Random().nextInt(beerUpcs.size() -0);
+        log.info("Random sample -> "+sample);
+        return beerUpcs.get(sample);
     }
 }

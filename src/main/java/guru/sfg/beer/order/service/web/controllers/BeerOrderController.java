@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RequestMapping("/api/v1/customers/{customerId}/")
+@RequestMapping("/api/v1/customers/")
 @RestController
 public class BeerOrderController {
 
@@ -39,7 +39,7 @@ public class BeerOrderController {
         this.beerOrderService = beerOrderService;
     }
 
-    @GetMapping("orders")
+    @GetMapping("{customerId}/orders")
     public BeerOrderPagedList listOrders(@PathVariable("customerId") UUID customerId,
                                          @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                          @RequestParam(value = "pageSize", required = false) Integer pageSize){
